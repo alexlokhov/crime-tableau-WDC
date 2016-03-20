@@ -1,0 +1,75 @@
+body {
+    font-family: 'Open Sans'
+}
+
+.navbar-default .navbar-brand {
+    float: left;
+    height: 50px;
+    padding: 15px 15px;
+    font-size: 18px;
+    font-family: museo-slab;
+    font-weight: bold;
+    line-height: 20px;
+    color: #000;
+}
+
+.pager {
+    margin: 8px;
+}
+
+.mmh {
+    width: 16%;
+    font-weight: normal;
+}
+
+.mm {
+    width: 7%;
+    font-weight: normal;
+}
+
+.formcontrol {
+    width: 100%;
+}
+
+.panel-wizard {
+    padding: 25px;
+}
+
+.nav-pills {
+    border-bottom-width: 1px;
+    border-bottom-style: solid;
+    border-bottom-color: #ddd;
+}
+
+.nav-pills > .active > a,
+.nav-pills > .active > a:hover,.nav-pills > li > a:hover {
+    text-decoration: none;
+    border-radius:0px;
+    margin-bottom: -4px;
+    border-bottom-width: 4px;
+    border-bottom-style: solid;
+    border-bottom-color: #FF6600;
+    color: #000 !important;
+    background-color: transparent !important;
+}
+
+.nav-pills > li > a {
+    border-radius:0px;
+}
+
+.table > thead > tr > th.hack {
+    font-weight: normal;
+    padding-left: 0px;
+}
+
+.range-bar {
+    background-color: #176799 !important;
+}
+      
+.range-quantity {
+    background-color: #78D6C7 !important;
+}
+
+.range-handle {
+    cursor: default !important;
+}

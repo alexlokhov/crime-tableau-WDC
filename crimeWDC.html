@@ -1,0 +1,108 @@
+<html>
+<meta http-equiv="Cache-Control" content="no-store" />
+<head>
+  <title>UK Street Crime Web Data Connector</title>
+
+  <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+
+  <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Open+Sans" />
+  <link rel="stylesheet" href="asset.css">
+
+  <script src="//online.tableau.com/javascripts/api/tableauwdc-1.1.0.js" type="text/javascript"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0-beta1/jquery.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
+  <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+
+
+  <script type="text/javascript">
+
+  (function() {
+
+    var myConnector = tableau.makeConnector();
+
+    myConnector.getColumnHeaders = function() {
+      var fieldNames = ['Category', 'Context', 'Id', 'Latitude', 'Longitude', 'Street id', 'Street Name','Location Subtype', 'Location Type', 'Month', 'Outcome Status', 'Persistent id'];
+      var fieldTypes = ['string', 'string', 'float', 'float', 'float', 'float', 'string' ,'string', 'string',  'date', 'string', 'string'];
+      tableau.headersCallback(fieldNames, fieldTypes); // tell tableau about the fields and their types
+    }
+
+    myConnector.getTableData = function(lastRecordToken) {
+      var hasMoreData = false;
+      tableau.log(tableau.connectionData);
+
+      var xhr = $.ajax({
+        url: tableau.connectionData,
+        dataType: 'json',
+        success: function (data) {
+          if (data) {
+            tableau.dataCallback(data, lastRecordToken, false);
+          } else {
+            tableau.abortWithError("No results found for this postcode");
+          }
+        },
+        error: function (xhr, ajaxOptions, thrownError) {
+          tableau.log("Connection error: " + xhr.responseText + "\n" + thrownError);
+          tableau.abortWithError("Error while trying to connect.");
+        }
+      });
+    }
+    tableau.registerConnector(myConnector);
+  })();
+  $(document).ready(function() {
+    $("#inputForm").submit(function() {
+      event.preventDefault();
+      var postcode = $('input[type=text]').val().trim();
+      var years = $('select[name=years]').val();
+      var months = years * 12;
+      if (postcode) {
+        var connectionUri = 'http://178.62.23.179/api/?postcode=' + postcode + '&months=' + months;
+        tableau.connectionName = "Crime data for " + postcode;
+        tableau.connectionData = connectionUri;
+        tableau.submit();
+      }
+    });
+  });
+</script>
+</head>
+<body>
+  <nav class="navbar navbar-default navbar-static-top"  role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar"
+                    aria-expanded="false" aria-controls="navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">&nbsp;</a>
+        </div>
+    </div>
+  </nav>
+  <div class="content-wrapper">
+    <div class="body-wrapper">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-12">
+            <form id="inputForm" action="">
+	    <h2><br/>UK Street Crime Web Data Connector for Tableau<br/><br/></h2>
+            <h4>Enter a full UK postcode:&nbsp;&nbsp;<input type="text" name="postcode" /></h4>
+	    <h4>How much historical data to load, in years:
+    	      <select name="years">
+                <option value="5">5</option>
+                <option value="4">4</option>
+                <option value="3">3</option>
+                <option value="2">2</option>
+                <option value="1">1</option>
+              </select>
+            </h4>
+            <h3><br/><input type="submit" value="Submit" class="btn btn-success btn-lg"/></h3>
+            </form>
+	    <h4><br/><br/><hr/>Based on the open data provided by data.police.uk.</h4>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
